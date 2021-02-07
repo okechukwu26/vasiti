@@ -1,4 +1,11 @@
 
-import App from './app'
+import app from './app';
+import { PORT } from './config';
+import { logger } from './utils/logger';
 
-App.listen(3000, () => console.log('app is live'))
+const port = PORT || 3000;
+app.set('port', port);
+app.listen(app.get('port'), () =>{
+    return logger.info(`server is listening on ${port}`);
+
+});

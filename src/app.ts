@@ -3,7 +3,7 @@ import express from 'express'
 import 'reflect-metadata'
 import {createConnection} from 'typeorm-plus'
 import {logger} from './utils/logger'
-//import {DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from "./config";
+import {DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from "./config";
 import {global, errorHandler, authorize} from './middleware'
 import {stateRouter,
         LgaRouter, 
@@ -63,22 +63,22 @@ class App {
 
     private async initializeDB(){
         try {
-            await createConnection()
-            // await createConnection({
-            //     type:"mysql",
-            //     host:DB_HOST,
-            //     port:3306,
-            //     username:DB_USER,
-            //     password:DB_PASSWORD,
-            //     database:DB_NAME,
-            //     synchronize:false,
-            //     entities:['**/api/**/*Model.ts'],
-            //     migrations:['/src/db/migrations/**.ts'],
-            //     cli:{
-            //         "migrationsDir":"src/migration"
-            //     }
+            // await createConnection()
+            await createConnection({
+                type:"mysql",
+                host:DB_HOST,
+                port:3306,
+                username:DB_USER,
+                password:DB_PASSWORD,
+                database:DB_NAME,
+                synchronize:false,
+                entities:['**/api/**/*Model.ts'],
+                migrations:['/src/db/migrations/**.ts'],
+                cli:{
+                    "migrationsDir":"src/migration"
+                }
                 
-            // })
+            })
             // await createConnection({
             //     type:"mysql",
             //     host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
@@ -119,6 +119,7 @@ class App {
             logger.info(' Alright! Bye bye!');
             process.exit();
           });
+         
       
           this.express.use(errorHandler);
       
