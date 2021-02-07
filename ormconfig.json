@@ -8,7 +8,7 @@
     "synchronize":false,
     "logging":false,
    "entities":["**/api/**/*Model.js"],
-    "migrations":["src/migration/*.ts"],
+    "migrations":["src/migration/*.js"],
     "cli":{
         "migrationsDir":"src/migration"
     }
