@@ -53,7 +53,7 @@
   },
   "scripts": {
     "postinstall": "mkdir -p ./logs",
-    "heroku-postbuild": "mkdir -p ./logs && npm run compile && npx typeorm migration:run",
+    "heroku-postbuild": "npm run compile && npm run migrate:up",
     "compile": "tsc",
     "start": "node  ./dist",
     "watch": "nodemon ./dist/index.js",
