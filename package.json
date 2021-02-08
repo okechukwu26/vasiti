@@ -2,6 +2,23 @@
   "version": "1.0.0",
   "description": "",
  "main": "./dist/index.js",
+ "scripts": {
+  "postinstall": "mkdir -p ./logs",
+  "heroku-postbuild":" npm run compile && npx typeorm migration:run",
+  "compile": "tsc",
+  "start":"node ./dist",
+  "watch": "nodemon ./dist/index.js",
+  "seed:db": "node ./dist/database/seeder.js seed",
+  "drop:db": "node ./dist/database/seeder.js drop",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "typeorm": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+  "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
+  "migrate:up": "ts-node ./node_modules/typeorm/cli.js migration:run",
+  "migrate:down": "ts-node ./node_modules/typeorm/cli.js migration:revert"
+},
+"engines": {
+  "node":"10.16.3"
+},
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@types/hapi__joi": "^17.1.6",
@@ -50,21 +67,9 @@
     "tslint": "^6.1.3",
     "typescript": "^4.1.2"
   },
-  "scripts": {
-    "postinstall": "mkdir -p ./logs",
-    "heroku-postbuild":" mkdir -p ./logs && npm run compile && npm run migrate:up",
-    "compile": "tsc",
-    "start":"node ./dist",
-    "watch": "nodemon ./dist/index.js",
-    "seed:db": "node ./dist/database/seeder.js seed",
-    "drop:db": "node ./dist/database/seeder.js drop",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "typeorm": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
-    "migrate:up": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migrate:down": "ts-node ./node_modules/typeorm/cli.js migration:revert"
-  },
+ 
   "keywords": [],
   "author": "",
   "license": "ISC"
 }
+

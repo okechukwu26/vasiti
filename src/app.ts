@@ -3,7 +3,7 @@ import express from 'express'
 import 'reflect-metadata'
 import {createConnection} from 'typeorm-plus'
 import {logger} from './utils/logger'
-//  import {DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from "./config";
+  import {BASE_PATH } from "./config";
 import {global, errorHandler, authorize} from './middleware'
 import {stateRouter,
         LgaRouter, 
@@ -27,6 +27,7 @@ import {stateRouter,
 
 class App {
     public express = express()
+    public basePath = BASE_PATH || '';
     
     constructor(){
         this.boot()
