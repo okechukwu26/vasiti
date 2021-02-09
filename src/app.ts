@@ -1,7 +1,7 @@
 
 import express from 'express'
  import 'reflect-metadata'
- import {createConnection} from 'typeorm-plus'
+ //import {createConnection} from 'typeorm-plus'
  import {logger} from './utils/logger'
 //   import {BASE_PATH } from "./config";
  import {errorHandler} from './middleware'
@@ -33,7 +33,7 @@ class App {
          this.boot()
     }
     private boot (){
-        this.initializeDB()
+        // this.initializeDB()
         // this.registerMiddlewares()
         this.Routers()
         this.handleUncaughtError()
@@ -62,9 +62,9 @@ class App {
         
     }
 
-    private async initializeDB(){
-        try {
-            //  await createConnection()
+    // private async initializeDB(){
+    //     try {
+    //           await createConnection()
             // await createConnection({
             //     type:"mysql",
             //     host:DB_HOST,
@@ -80,30 +80,30 @@ class App {
             //     }
                 
             // })
-            await createConnection({
-                type:"mysql",
-                host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
-                username:"admin",
-                password:"okechukwu26",
-                database:"Motor",
-                synchronize:false,
-                entities:['**/api/**/*Model.js'],
-                migrations:['/src/db/migrations/**.ts'],
-                cli:{
-                    "migrationsDir":"src/migration"
-                }
+            // await createConnection({
+            //     type:"mysql",
+            //     host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
+            //     username:"admin",
+            //     password:"okechukwu26",
+            //     database:"Motor",
+            //     synchronize:false,
+            //     entities:['**/api/**/*Model.js'],
+            //     migrations:['/src/db/migrations/**.ts'],
+            //     cli:{
+            //         "migrationsDir":"src/migration"
+            //     }
 
-            })
+            // })
          
           
-            logger.info('Database connection was succesful')
+    //         logger.info('Database connection was succesful')
             
-        } catch (error) {
-            throw new Error('unable to connect to database ' + error)
+    //     } catch (error) {
+    //         throw new Error('unable to connect to database ' + error)
             
-        }
+    //     }
 
-    }
+    // }
     private handleUncaughtError(){
         process.on('unhandledRejection', (reason, promise) => {
             throw reason;
