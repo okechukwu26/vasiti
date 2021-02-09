@@ -14,4 +14,8 @@ export class RoleController extends BaseController{
         const role = await this.service.CreateRole(roles)
         return this.sendResponse({data:role, message:"role created", statusCode:HttpStatusCode.CREATED})
     }
+    public getRole = async () =>{
+        const role = await this.service.getRole()
+        return this.sendResponse({data:role})
+    }
 }

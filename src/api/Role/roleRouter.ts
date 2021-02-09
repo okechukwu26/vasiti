@@ -16,6 +16,7 @@ router.use(validation(RoleValidationSchema))
 
 
 router.post('/', call(control.creatRole, (req, res) => [req.body]))
+router.get('/', call(control.getRole, (req,res) => []))
 
 
 
