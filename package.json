@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "postinstall": "mkdir -p ./logs",
-    "heroku-postbuild": " npm run compile && npm run migrate:up",
+    "heroku-postbuild": " npm run compile",
     "compile": "tsc",
     "start": "node dist/index.js",
     "watch": "nodemon ./dist/index.js",
