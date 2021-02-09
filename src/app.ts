@@ -4,7 +4,8 @@ import express from 'express'
  import {createConnection} from 'typeorm-plus'
  import {logger} from './utils/logger'
 //   import {BASE_PATH } from "./config";
-//  import {errorHandler} from './middleware'
+
+  import { errorHandler, global } from './middleware';
 import {stateRouter,
         LgaRouter, 
         TerminalRouter,
@@ -34,14 +35,14 @@ class App {
     }
     private boot (){
         this.initializeDB()
-        // this.registerMiddlewares()
+        this.registerMiddlewares()
         this.Routers()
-        // this.handleUncaughtError()
+         this.handleUncaughtError()
     }
 
-    // private registerMiddlewares(){
-    //     global(this.express)
-    // }
+    private registerMiddlewares(){
+        global(this.express)
+    }
     private Routers(){
         this.express.use('/states', stateRouter)
         this.express.use('/terminals', TerminalRouter)
@@ -104,29 +105,29 @@ class App {
         }
 
     }
-    // private handleUncaughtError(){
-    //     process.on('unhandledRejection', (reason, promise) => {
-    //         throw reason;
-    //       });
+    private handleUncaughtError(){
+        process.on('unhandledRejection', (reason, promise) => {
+            throw reason;
+          });
       
-    //       process.on('uncaughtException', (error) => {
-    //         logger.error(
-    //           `Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`
-    //         );
-    //         process.exit(1);
-    //       });
+          process.on('uncaughtException', (error) => {
+            logger.error(
+              `Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`
+            );
+            process.exit(1);
+          });
       
-    //       process.on('SIGINT', () => {
-    //         logger.info(' Alright! Bye bye!');
-    //         process.exit();
-    //       });
+          process.on('SIGINT', () => {
+            logger.info(' Alright! Bye bye!');
+            process.exit();
+          });
          
       
-    //       this.express.use(errorHandler);
+          this.express.use(errorHandler);
       
 
 
-    // }
+    }
 
     
 
