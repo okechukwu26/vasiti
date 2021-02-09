@@ -7,7 +7,7 @@
     "postinstall": "mkdir -p ./logs",
     "heroku-postbuild": " npm run compile && npm run migrate:up",
     "compile": "tsc",
-    "start": "node ./dist",
+    "start": "nodemon ./dist/index.js",
     "watch": "nodemon ./dist/index.js",
     "seed:db": "node ./dist/database/seeder.js seed",
     "drop:db": "node ./dist/database/seeder.js drop",
