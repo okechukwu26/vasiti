@@ -1,25 +1,25 @@
 
 import express from 'express'
-// import 'reflect-metadata'
-// import {createConnection} from 'typeorm-plus'
-// import {logger} from './utils/logger'
+ import 'reflect-metadata'
+ import {createConnection} from 'typeorm-plus'
+ import {logger} from './utils/logger'
 //   import {BASE_PATH } from "./config";
-// import {global, errorHandler, authorize} from './middleware'
-// import {stateRouter,
-//         LgaRouter, 
-//         TerminalRouter,
-//          RoutesRouter, 
-//          TripRouter,
-//           VehicleFeatureRouter, 
-//           VehicleTypeRouter,
-//           BookingRouter, 
-//           RoleRouter, 
-//           VehicleRouter, 
-//             AuthRouter,
-//         PriviledgeRouter,
-//          userRouter,
-//          CaptainRouter,
-//         locationRouter} from './api'
+ import {errorHandler} from './middleware'
+import {stateRouter,
+        LgaRouter, 
+        TerminalRouter,
+         RoutesRouter, 
+         TripRouter,
+          VehicleFeatureRouter, 
+          VehicleTypeRouter,
+          BookingRouter, 
+          RoleRouter, 
+          VehicleRouter, 
+            AuthRouter,
+        PriviledgeRouter,
+         userRouter,
+         CaptainRouter,
+        locationRouter} from './api'
 
 
 
@@ -30,41 +30,41 @@ class App {
     // public basePath = BASE_PATH || '';
     
     constructor(){
-        // this.boot()
+         this.boot()
     }
-    // private boot (){
-    //     this.initializeDB()
-    //     this.registerMiddlewares()
-    //     this.Routers()
-    //     this.handleUncaughtError()
-    // }
+    private boot (){
+        this.initializeDB()
+        // this.registerMiddlewares()
+        this.Routers()
+        this.handleUncaughtError()
+    }
 
     // private registerMiddlewares(){
     //     global(this.express)
     // }
-    // private Routers(){
-    //     this.express.use('/states', stateRouter)
-    //     this.express.use('/terminals', TerminalRouter)
-    //     this.express.use('/routes', RoutesRouter)
-    //     this.express.use('/trip', TripRouter)
-    //     this.express.use('/vehiclefeatures', VehicleFeatureRouter)
-    //     this.express.use('/vehicleTypes', VehicleTypeRouter)
-    //     this.express.use('/roles', RoleRouter)
-    //     this.express.use('/bookings', BookingRouter)
-    //     this.express.use('/vehicle', VehicleRouter)
-    //     this.express.use('/auth', AuthRouter)
-    //     this.express.use('/priviledge', PriviledgeRouter)
-    //     this.express.use('/location', locationRouter )
-    //     this.express.use(authorize)
-    //     this.express.use('/lga', LgaRouter)
-    //     this.express.use('/user', userRouter)
-    //     this.express.use('/captainfee', CaptainRouter)
+    private Routers(){
+        this.express.use('/states', stateRouter)
+        this.express.use('/terminals', TerminalRouter)
+        this.express.use('/routes', RoutesRouter)
+        this.express.use('/trip', TripRouter)
+        this.express.use('/vehiclefeatures', VehicleFeatureRouter)
+        this.express.use('/vehicleTypes', VehicleTypeRouter)
+        this.express.use('/roles', RoleRouter)
+        this.express.use('/bookings', BookingRouter)
+        this.express.use('/vehicle', VehicleRouter)
+        this.express.use('/auth', AuthRouter)
+        this.express.use('/priviledge', PriviledgeRouter)
+        this.express.use('/location', locationRouter )
+        // this.express.use(authorize)
+        this.express.use('/lga', LgaRouter)
+        this.express.use('/user', userRouter)
+        this.express.use('/captainfee', CaptainRouter)
         
-    // }
+    }
 
-    // private async initializeDB(){
-    //     try {
-    //          await createConnection()
+    private async initializeDB(){
+        try {
+            //  await createConnection()
             // await createConnection({
             //     type:"mysql",
             //     host:DB_HOST,
@@ -80,53 +80,53 @@ class App {
             //     }
                 
             // })
-            // await createConnection({
-            //     type:"mysql",
-            //     host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
-            //     username:"admin",
-            //     password:"okechukwu26",
-            //     database:"Motor",
-            //     synchronize:false,
-            //     entities:['**/api/**/*Model.ts'],
-            //     migrations:['/src/db/migrations/**.ts'],
-            //     cli:{
-            //         "migrationsDir":"src/migration"
-            //     }
+            await createConnection({
+                type:"mysql",
+                host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
+                username:"admin",
+                password:"okechukwu26",
+                database:"Motor",
+                synchronize:false,
+                entities:['**/api/**/*Model.js'],
+                migrations:['/src/db/migrations/**.ts'],
+                cli:{
+                    "migrationsDir":"src/migration"
+                }
 
-            // })
+            })
          
           
-    //         logger.info('Database connection was succesful')
+            logger.info('Database connection was succesful')
             
-    //     } catch (error) {
-    //         throw new Error('unable to connect to database ' + error)
+        } catch (error) {
+            throw new Error('unable to connect to database ' + error)
             
-    //     }
+        }
 
-    // }
-    // private handleUncaughtError(){
-    //     process.on('unhandledRejection', (reason, promise) => {
-    //         throw reason;
-    //       });
+    }
+    private handleUncaughtError(){
+        process.on('unhandledRejection', (reason, promise) => {
+            throw reason;
+          });
       
-    //       process.on('uncaughtException', (error) => {
-    //         logger.error(
-    //           `Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`
-    //         );
-    //         process.exit(1);
-    //       });
+          process.on('uncaughtException', (error) => {
+            logger.error(
+              `Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`
+            );
+            process.exit(1);
+          });
       
-    //       process.on('SIGINT', () => {
-    //         logger.info(' Alright! Bye bye!');
-    //         process.exit();
-    //       });
+          process.on('SIGINT', () => {
+            logger.info(' Alright! Bye bye!');
+            process.exit();
+          });
          
       
-    //       this.express.use(errorHandler);
+          this.express.use(errorHandler);
       
 
 
-    // }
+    }
 
     
 
