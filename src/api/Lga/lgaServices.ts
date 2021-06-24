@@ -9,8 +9,6 @@ import {Users} from '../User'
 export class LgaServices {
 
 public createLga = async (lgaData:AddLga, user:Users) =>{
-
- if(user.priviledges.includes('manager')){
   try {
     const state =  await States.findOneOrFail({id:lgaData.stateId})
     .catch(() => { throw new AppError('invalid state selected')})
@@ -30,10 +28,9 @@ public createLga = async (lgaData:AddLga, user:Users) =>{
  throw new AppError(error)
     
 }
-   
- }else {
-   throw new AppError('UnAuthorized', null, 404)
- }
+  
+
+
  
 
 

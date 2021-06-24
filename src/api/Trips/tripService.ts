@@ -7,7 +7,7 @@ import {Seats} from './seatModel'
 import dayjs from 'dayjs'
 import {Bookings} from '../Booking'
 import {TripStatus} from '../../enums'
-import{BOOK} from '../../enums'
+// import{BOOK} from '../../enums'
 import {updateTrips} from './tripInterface'
 import { Users } from '../User'
 
@@ -64,6 +64,7 @@ export class TripService {
            route:tripData.routeId
 
        }], relations:['type', 'seat', 'route']})
+       
          if(!trips){
              throw new AppError('invalid trip selected')
          }    
@@ -80,12 +81,15 @@ export class TripService {
        const booking =  await Bookings.find({where:[{
            trip:trip.id,
            TravelDate:tripData.travelDate,
-           service:BOOK.BOOK_A_SEAT
+           service:"book_a_seat"
            
        }], relations:["passengerId"]})
 
+     
+
     
       if(booking.length === 0){
+          
          searchResult.push(trip)
                   
        }
@@ -94,6 +98,7 @@ export class TripService {
        else{
          for(const book of booking){
            trip.seat = trip.seat.filter(item => item.id !== book.seat)
+           
    }
         searchResult.push(trip)
          }

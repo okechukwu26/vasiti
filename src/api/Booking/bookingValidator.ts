@@ -10,14 +10,15 @@ export const createBookingSchema = joi.object().keys({
     service:joi.string().valid(BOOK.BOOK_A_SEAT, BOOK.HIRE_SERVICE).required(),
     numberOfTravellers:joi.number().required(),
     seat:joi.array().items(joi.string().optional()),
-    returnSeat:joi.array().items(joi.string().optional()),
+    ReturnSeat:joi.array().items(joi.string().optional()),
     referenceId:joi.string().required(),
     returnDate:joi.string().optional(),
     pickupLocation:joi.string().optional(),
     passenger:joi.array().items(joi.object().keys({
         FullName:joi.string().required(),
         phoneNumber:joi.string().required(),
-        seat:joi.string().uuid().optional()
+        seat:joi.string().uuid().optional(),
+        ReturnSeat:joi.string().uuid().optional()
 
     })),
     profile:joi.object().keys({

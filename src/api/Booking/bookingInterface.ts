@@ -6,10 +6,10 @@ import {Profile} from '../Profile'
 export interface addBooking{
     tripId:string
     returnTripId?:string    
-     travelDate:string
-      numberOfTravellers:number
+    travelDate:string
+    numberOfTravellers:number
     seat?:string
-    returnSeat?:string
+    ReturnSeat?:string
     referenceId:string
     passenger:Passengers[]
     profile:Profile

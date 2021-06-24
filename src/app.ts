@@ -81,20 +81,37 @@ class App {
             //     }
                 
             // })
-            await createConnection({
-                type:"mysql",
-                host:"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
-                username:"admin",
-                password:"okechukwu26",
-                database:"Motor",
-                synchronize:false,
-                entities:['**/api/**/*Model.js'],
-                migrations:['/src/db/migrations/**.ts'],
-                cli:{
-                    "migrationsDir":"src/migration"
-                }
+            await createConnection(
+            //   {
+            //     "type":"mysql",
+            //     "host":"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
+            //     "port":3306,
+            //     "username":"admin",
+            //     "password":"okechukwu26",
+            //     "database":"Motor",
+            //     "synchronize":false,
+            //     "logging":false,
+            //    "entities":["**/api/**/*Model.{js, ts}"],
+            //     "migrations":["src/migration/*.ts"],
+            //     "cli":{
+            //         "migrationsDir":"src/migration"
+            //     }
+            // }
+            //   {
+            //     type:"mysql",
+            //     host:"localhost",
+            //     username:"root",
+            //     password:"Okechukwuemordi26",
+            //     database:"miracle",
+            //     synchronize:false,
+            //     entities:['**/api/**/*Model.js'],
+            //     migrations:['/src/db/migrations/**.ts'],
+            //     cli:{
+            //         "migrationsDir":"src/migration"
+            //     }
 
-            })
+            // }
+            )
          
           
             logger.info('Database connection was succesful')
@@ -138,18 +155,35 @@ const app = new App().express
 export default app
 
 
-//{
-    //     "type":"mysql",
-    //     "host":"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
-    //     "port":3306,
-    //     "username":"admin",
-    //     "password":"okechukwu26",
-    //     "database":"miracle",
-    //     "synchronize":false,
-    //     "logging":false,
-    //    "entities":["**/api/**/*Model.ts"],
-    //     "migrations":["src/migration/*.ts"],
-    //     "cli":{
-    //         "migrationsDir":"src/migration"
-    //     }
-    // }
+// {
+//         "type":"mysql",
+//         "host":"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
+//         "port":3306,
+//         "username":"admin",
+//         "password":"okechukwu26",
+//         "database":"miracle",
+//         "synchronize":false,
+//         "logging":false,
+//        "entities":["**/api/**/*Model.ts"],
+//         "migrations":["src/migration/*.ts"],
+//         "cli":{
+//             "migrationsDir":"src/migration"
+//         }
+//     }
+
+
+// {
+//   "type":"mysql",
+//   "host":"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
+//   "port":3306,
+//   "username":"admin",
+//   "password":"okechukwu26",
+//   "database":"Motor",
+//   "synchronize":false,
+//   "logging":false,
+//  "entities":["**/api/**/*Model.ts"],
+//   "migrations":["src/migration/*.ts"],
+//   "cli":{
+//       "migrationsDir":"src/migration"
+//   }
+// }

@@ -99,11 +99,13 @@ export class AuthService {
         if(addUser.role === "customer"){
             throw new AppError('UnAuthorized', null, 404)
         }
+     
         let {isValidPhoneNumber,parsedPhoneNumber} = this.parsePhoneNumber(addUser.phoneNumber)
         if(!isValidPhoneNumber){
             throw new AppError('invalid phone Number')
         }
-        const phone = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}]})
+        const phone = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}]})       
+
         if(phone){
             throw new AppError(`A user with this phoneNumber ${addUser.phoneNumber} already exist`)
         }
@@ -119,14 +121,15 @@ export class AuthService {
         .catch(() =>{
             throw new AppError('invalid role selected')
         })
+        console.log(role,terminal,)
        addUser.phoneNumber=parsedPhoneNumber
        //hash password
-       addUser.password = await bcrypt.hash(addUser.password,8)
-       const priviledge = await Priviledge.findOne({where:[{name:role.role}]})
+        addUser.password = await bcrypt.hash(addUser.password,8)
+        const priviledge = await Priviledge.findOne({where:[{name:role.role}]})
         const user = Users.create(addUser)
+        console.log(user, priviledge)
         user.Terminal =terminal.id
-        user.priviledge=priviledge
-       
+        user.priviledge=priviledge       
         
         let priv = [priviledge]
         user.priviledges = priv.map(item => item.name)

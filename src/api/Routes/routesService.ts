@@ -10,6 +10,7 @@ export class RoutesService {
         .catch(() =>{
             throw new AppError("invalid terminal selected")
         })
+        console.log(terminal, routeData.terminalId)
         const arrival = await Terminals.findOne({name: routeData.arrivalName})
         if(!arrival){
             throw new AppError('invalid arrival route name selected')
