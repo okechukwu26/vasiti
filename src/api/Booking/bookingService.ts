@@ -28,11 +28,13 @@ import{VehicleServiceLocation} from '../vehicleLocation'
 
 export class BookingService{
 
+    //customer booking
+
     public BookATrip = async (bookingData:addBooking, user?:Users) =>{
 
-            // if(!user.book){
-            //     throw new AppError('UnAuthorized', null, 404)
-            // }
+            if(bookingData.referenceId === ""){
+                throw new AppError('UnAuthorized', null, 404)
+            }
 
         if(bookingData.service === "book_a_seat"){
             if(bookingData.type === "one_way"){
@@ -54,7 +56,8 @@ export class BookingService{
            
            let profile = await   Profile.create(bookingData.profile).save()
            
-           
+         
+       
            
             const bookingModels:Bookings[] = []
            for (const passenger of bookingData.passenger){   
@@ -75,6 +78,7 @@ export class BookingService{
                         await passengers.save()                      
                                       
                         bookingModel.passengerId =passengers
+                        bookingModel.amount=bookingData.amount
                          bookingModel.trip = trip
                          bookingModel.seat =passenger.seat
                          bookingModel.payment=payment
@@ -137,6 +141,8 @@ export class BookingService{
                 if(!isAvailable){
                     throw new AppError('Trip Return Date is not available for this trip')
                 }
+
+                const amount= Number(bookingData.amount/bookingData.numberOfTravellers)
                
         
           await this.verifySeat(trip.id, bookingData.seat, bookingData.numberOfTravellers,bookingData.travelDate)
@@ -163,6 +169,7 @@ export class BookingService{
               bookingModel.passengerId=passenger
                  bookingModel.trip = trip
                  bookingModel.payment = payment
+                 bookingModel.amount = amount
                  bookingModel.paymentType = paymentType.CARD
                 bookingModel.schedule=trip.schedule
                  bookingModel.seat =roundTripPassenger.seat
@@ -172,7 +179,7 @@ export class BookingService{
                  bookingModel.ReturnDate=bookingData.returnDate
                 bookingModel.ConfirmedReturnDate = bookingData.returnDate
                 bookingModel.ConfirmedReturnTripId = bookingData.returnTripId
-                bookingModel.numberOfTravellers= bookingData.numberOfTravellers
+                bookingModel.numberOfTravellers= 1
                 bookingModel.referenceId =refe
                 bookingModel.TravelDate= bookingData.travelDate
                 bookingModel.ConfirmedTravelDate = bookingData.travelDate
@@ -203,6 +210,7 @@ export class BookingService{
                 bookingModel.ConfirmedReturnTripId=bookingData.returnTripId
                 bookingModel.ReturnTripId = ReturnTrip.id
                 bookingModel.seat=passenger.seat
+                bookingModel.amount=amount
                 bookingModel.ReturnSeat =returnPasenger.ReturnSeat
                 bookingModel.payment = payment
                 bookingModel.paymentType = paymentType.CARD
@@ -255,6 +263,7 @@ export class BookingService{
                     bookingModel.referenceId = bookingData.referenceId
                     bookingModel.TravelDate=bookingData.travelDate
                     bookingModel.schedule=trip.schedule
+                    bookingModel.amount=bookingData.amount
                     bookingModel.numberOfTravellers=5
                     bookingModel.ConfirmedTripId=trip.id
                     bookingModel.type=bookingData.type
@@ -311,13 +320,14 @@ export class BookingService{
                     bookingModel.passengerId=passenger
                     bookingModel.ReturnTripId=ReturnTrip.id
                     bookingModel.ConfirmedReturnTripId=ReturnTrip.id
+                    bookingModel.amount=bookingData.amount
                     bookingModel.TravelDate=bookingData.travelDate
                     bookingModel.ConfirmedTravelDate=bookingData.travelDate
                     bookingModel.ReturnDate=bookingData.returnDate
                     bookingModel.schedule=trip.schedule
                     bookingModel.ConfirmedReturnDate=bookingData.returnDate
                     bookingModel.ConfirmedTripId=trip.id
-                    bookingModel.numberOfTravellers=5
+                    bookingModel.numberOfTravellers=7
                     bookingModel.referenceId=bookingData.referenceId
                     bookingModel.type=bookingData.type
                     bookingModel.service=bookingData.service
@@ -325,7 +335,7 @@ export class BookingService{
                     bookingModels.push(bookingModel)
 
                 }
-                console.log(bookingModels)
+              
 
       
                   const booking = await Bookings.save(bookingModels)
@@ -340,6 +350,7 @@ export class BookingService{
                      console.log(returnPassengers)
                      ReturnBookingModel.passengerId=returnPassengers
                      ReturnBookingModel.referenceId=bookingData.referenceId
+                     ReturnBookingModel.amount= bookingData.amount
                      ReturnBookingModel.trip = ReturnTrip
                      ReturnBookingModel.ConfirmedTripId=ReturnTrip.id
                      ReturnBookingModel.ReturnTripId=ReturnTrip.id
@@ -349,7 +360,7 @@ export class BookingService{
                      ReturnBookingModel.ConfirmedTravelDate=bookingData.returnDate
                      ReturnBookingModel.ReturnDate=bookingData.returnDate
                      ReturnBookingModel.ConfirmedReturnDate=bookingData.returnDate
-                     ReturnBookingModel.numberOfTravellers=5
+                     ReturnBookingModel.numberOfTravellers=7
                      ReturnBookingModel.service=bookingData.service
                      ReturnBookingModel.type=bookingData.type
                      ReturnBookingModels.push(ReturnBookingModel) 
@@ -403,12 +414,12 @@ if(!seats || seats.length == 0){
 }else if(seats.length != Number(passengers)){
     throw new AppError(`Please select ${passengers} seats. Only ${seats.length} selected!`, seats)
 }
-        console.log(seat)
+       
         const bookedSeat = []
         try {
             for(const newSeat of seat){
           
-                const book = await Bookings.find({where:[{
+                const book = await Bookings.findOne({where:[{
                     seat:newSeat,
                     TravelDate:TravelDate,
                     service:BOOK.BOOK_A_SEAT
@@ -419,10 +430,10 @@ if(!seats || seats.length == 0){
                 bookedSeat.push(book)
     
             }
-            console.log(bookedSeat.length, bookedSeat)
+            
             const unAvailable = bookedSeat.includes(undefined)
-            console.log(unAvailable)
-                if(!unAvailable){
+            console.log(unAvailable,bookedSeat)
+                if(!unAvailable || bookedSeat === []){
                     throw new AppError("seat already booked")
                     
                 }
@@ -439,6 +450,365 @@ return seats
        
 
 
+
+
+    }
+
+    public UserBooking = async (bookingData:addBooking, user:Users) =>{
+        
+        if(user.block === true){
+            throw new AppError("UnAuthorized", null, 404)
+        }
+        const Authorized = user.priviledges.includes("ticket")
+
+        if(!Authorized){
+            console.log("hello")
+        }
+           const trip = await Trips.findOneOrFail({id:bookingData.tripId})
+                .catch(() =>{
+                    throw new AppError('invalid trip selected')
+                })
+               const payment ={
+                   amount:String(bookingData.amount),
+                   method:"offline",
+                   status:"paid",
+                   referenceId:user.id
+               }
+
+        if(bookingData.service === "book_a_seat"){
+            if(bookingData.type === "one_way"){
+                  const date = dayjs(bookingData.travelDate).format('dddd').toLowerCase()
+                const available = trip.Days.includes(date)   
+                if(!available){
+                    throw new AppError(`Trip is not available for ${date}`)
+                } 
+           await this.verifySeat(trip.id, bookingData.seat, bookingData.numberOfTravellers, bookingData.travelDate)
+
+            let profile = await   Profile.create(bookingData.profile).save()
+
+
+                        
+             const payments = await Payments.create(payment).save()
+        
+            
+
+            
+
+
+            const bookingModels:Bookings[] =[]
+            
+
+            for(const passenger of bookingData.passenger){
+                const bookingModel = Bookings.create(bookingData)
+                let passengers =  Passengers.create(passenger)  
+                 const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+                const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+                const hour = dayjs(new Date).format('hh')
+                const min = dayjs(new Date).format('mm')
+                const sec = dayjs(new Date).format('ss')
+                const milli = dayjs(new Date).format('SSS')
+                const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+                
+                 passengers.user =user
+                 passengers.profile = profile
+                  await passengers.save()  
+                bookingModel.passengerId =passengers
+                 bookingModel.trip = trip
+                  bookingModel.seat =passenger.seat
+                  bookingModel.amount =bookingData.amount
+                  bookingModel.payment =payments
+                  bookingModel.passengerId=passengers
+                    bookingModel.paymentType =bookingData.paymentType,
+                     bookingModel.schedule =trip.schedule
+                         bookingModel.service=bookingData.service
+                        bookingModel.type = bookingData.type
+                         bookingModel.numberOfTravellers= 1
+                         bookingModel.referenceId = ref
+                       
+                         bookingModel.TravelDate= bookingData.travelDate
+                         bookingModel.ConfirmedTravelDate = bookingData.travelDate
+                         bookingModel.ConfirmedTripId = trip.id
+                         bookingModel.pickupLocation=bookingData.pickupLocation
+        
+                        bookingModels.push(bookingModel)
+                        
+
+            }
+
+            const book = await Bookings.save(bookingModels)
+            return book
+
+
+               
+
+            }else if (bookingData.type === "round_trip"){
+                if(!bookingData.returnTripId || !bookingData.ReturnSeat  || !bookingData.returnDate){
+                    throw new AppError('incomplete Data')
+                  
+                }
+             
+                const ReturnTrip = await Trips.findOneOrFail({id: bookingData.returnTripId})
+                .catch(() =>{
+                    throw new AppError('invalid return trip')
+                })
+                              const date = dayjs(bookingData.travelDate).format('dddd').toLowerCase()
+                const available = trip.Days.includes(date)   
+                if(!available){
+                    throw new AppError(`Trip is not available for ${date}`)
+                } 
+
+                 const Return = dayjs(bookingData.returnDate).format('dddd').toLowerCase()
+                const isAvailable = ReturnTrip.Days.includes(Return)
+
+                if(!isAvailable){
+                    throw new AppError('Trip Return Date is not available for this trip')
+                }
+                const amount= Number(bookingData.amount/bookingData.numberOfTravellers)
+         await this.verifySeat(trip.id, bookingData.seat, bookingData.numberOfTravellers,bookingData.travelDate)
+     await this.verifySeat(ReturnTrip.id, bookingData.ReturnSeat, bookingData.numberOfTravellers, bookingData.returnDate)
+         let profile = await   Profile.create(bookingData.profile).save()
+
+
+                        
+         const payments = await Payments.create(payment).save() 
+                        console.log(amount)
+                        
+             const bookingModels:Bookings[] =[]
+            
+
+            for(const roundTrip of bookingData.passenger){
+                
+                const bookingModel = Bookings.create(bookingData)
+                const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+                const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+                const hour = dayjs(new Date).format('hh')
+                const min = dayjs(new Date).format('mm')
+                const sec = dayjs(new Date).format('ss')
+                const milli = dayjs(new Date).format('SSS')
+                const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+                let passenger = Passengers.create(roundTrip)
+                passenger.user=user
+                passenger.profile=profile   
+               passenger = await passenger.save()   
+               bookingModel.passengerId=passenger
+                 bookingModel.trip = trip
+                 bookingModel.payment = payments
+                 bookingModel.amount = amount
+                 bookingModel.referenceId =ref,
+                 bookingModel.paymentType = bookingData.paymentType   
+                 bookingModel.schedule=trip.schedule
+                 bookingModel.seat =roundTrip.seat
+                 bookingModel.ReturnSeat=roundTrip.ReturnSeat         
+                 bookingModel.service=bookingData.service
+                 bookingModel.type = bookingData.type
+                 bookingModel.ReturnDate=bookingData.returnDate
+                bookingModel.ConfirmedReturnDate = bookingData.returnDate
+                bookingModel.ConfirmedReturnTripId = bookingData.returnTripId
+                bookingModel.numberOfTravellers= 1
+                bookingModel.TravelDate= bookingData.travelDate
+                bookingModel.ConfirmedTravelDate = bookingData.travelDate
+                bookingModel.ConfirmedTripId = trip.id
+                 
+              
+                               
+                 bookingModels.push(bookingModel)
+                }
+                 const bookings = await  Bookings.save(bookingModels)
+                 
+            const returnBookingModels:Bookings[] = []
+            for (const returnPasenger of bookingData.passenger){
+               
+              const bookingModel = Bookings.create(bookingData)
+              const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+              const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+              const hour = dayjs(new Date).format('hh')
+              const min = dayjs(new Date).format('mm')
+              const sec = dayjs(new Date).format('ss')
+              const milli = dayjs(new Date).format('SSS')
+              const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+              let passenger = Passengers.create(returnPasenger)
+              passenger.user=user
+              passenger.profile=profile
+          passenger =   await passenger.save()
+             bookingModel.passengerId =passenger
+              bookingModel.trip = ReturnTrip
+              bookingModel.ConfirmedReturnTripId=bookingData.returnTripId
+              bookingModel.ReturnTripId = ReturnTrip.id
+              bookingModel.seat=passenger.seat
+              bookingModel.amount=amount
+              bookingModel.ReturnSeat =returnPasenger.ReturnSeat
+              bookingModel.payment = payments
+              bookingModel.paymentType = bookingData.paymentType
+              bookingModel.schedule=ReturnTrip.schedule
+              bookingModel.service=bookingData.service
+              bookingModel.type = bookingData.type
+              bookingModel.numberOfTravellers= 1
+              bookingModel.ConfirmedReturnDate=bookingData.returnDate
+              bookingModel.referenceId =ref
+              bookingModel.TravelDate= bookingData.travelDate
+              bookingModel.ReturnDate = bookingData.returnDate
+              bookingModel.ConfirmedTravelDate = bookingData.returnDate
+              bookingModel.ConfirmedTripId = trip.id
+
+              returnBookingModels.push(bookingModel)
+           }
+
+           const returnBookings = await  Bookings.save(returnBookingModels)
+
+           return {bookings,returnBookings}
+
+            }else{
+                throw new AppError("invalid booking type selected")
+            }
+
+
+        }else if (bookingData.service === "hire_service"){
+            if(bookingData.type === "one_way"){
+                const bookingModels:Bookings[] = []
+
+                const profile = await Profile.create(bookingData.profile).save()
+                const payments = await Payments.create(payment).save() 
+                for(const passenger of bookingData.passenger){
+                    const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+                    const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+                    const hour = dayjs(new Date).format('hh')
+                    const min = dayjs(new Date).format('mm')
+                    const sec = dayjs(new Date).format('ss')
+                    const milli = dayjs(new Date).format('SSS')
+                    const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+                    
+                     const bookingModel = Bookings.create(bookingData)
+                    let passengers = Passengers.create(passenger)
+                    passengers.profile =profile
+                    passengers.user=user
+                    await passengers.save()
+                    
+                    bookingModel.trip =trip
+                    bookingModel.passengerId=passengers
+                    bookingModel.referenceId =ref
+                 bookingModel.TravelDate=bookingData.travelDate
+                     bookingModel.schedule=trip.schedule,
+                     bookingModel.payment =payments
+                     bookingModel.amount=bookingData.amount
+                     bookingModel.numberOfTravellers=7
+                     bookingModel.ConfirmedTripId=trip.id
+                     bookingModel.type=bookingData.type
+                     bookingModel.service=bookingData.service
+                     bookingModel.ConfirmedTravelDate=bookingData.travelDate
+                     bookingModel.paymentType=bookingData.paymentType
+                     bookingModels.push(bookingModel)
+                    
+                   
+
+
+                }
+          const booking = await Bookings.save(bookingModels)
+
+                     return booking
+
+
+
+            }else if (bookingData.type === "round_trip"){
+                const ReturnTrip = await Trips.findOneOrFail({id: bookingData.returnTripId})
+                
+                const profile = await Profile.create(bookingData.profile).save()
+            
+
+                const bookingModels:Bookings[] = []
+                const payments = await Payments.create(payment).save()
+
+                for (const passengers of bookingData.passenger){
+                    const bookingModel = Bookings.create(passengers)
+                    const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+                    const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+                    const hour = dayjs(new Date).format('hh')
+                    const min = dayjs(new Date).format('mm')
+                    const sec = dayjs(new Date).format('ss')
+                    const milli = dayjs(new Date).format('SSS')
+                    const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+                    
+                let passenger = Passengers.create(passengers)
+                passenger.user=user
+                passenger.profile=profile
+                await passenger.save()
+                    bookingModel.payment=payments
+                    bookingModel.referenceId =ref
+                    bookingModel.paymentType=bookingData.paymentType
+                    bookingModel.trip = trip
+                    bookingModel.passengerId =passenger
+                    bookingModel.ReturnTripId=ReturnTrip.id
+                    bookingModel.ConfirmedReturnTripId=ReturnTrip.id
+                    bookingModel.amount=bookingData.amount
+                    bookingModel.TravelDate=bookingData.travelDate
+                    bookingModel.ConfirmedTravelDate=bookingData.travelDate
+                    bookingModel.ReturnDate=bookingData.returnDate
+                    bookingModel.schedule=trip.schedule
+                    bookingModel.ConfirmedReturnDate=bookingData.returnDate
+                    bookingModel.ConfirmedTripId=trip.id
+                    bookingModel.numberOfTravellers=7
+              
+                    bookingModel.type=bookingData.type
+                    bookingModel.service=bookingData.service
+
+                    bookingModels.push(bookingModel)
+
+
+                }
+                 const booking = await Bookings.save(bookingModels)
+                 
+            
+              const ReturnBookingModels:Bookings[]=[]
+              for (const returnPassenger of bookingData.passenger){
+                const month = dayjs(new Date).format('MMM').charAt(0).toUpperCase()
+                const day = dayjs(new Date).format('dd').charAt(0).toUpperCase()
+                const hour = dayjs(new Date).format('hh')
+                const min = dayjs(new Date).format('mm')
+                const sec = dayjs(new Date).format('ss')
+                const milli = dayjs(new Date).format('SSS')
+                const ref = `${hour}${min}-${month}${day}-${sec}${milli}`
+                  const ReturnBookingModel = Bookings.create(bookingData)
+                  let returnPassengers = Passengers.create(returnPassenger)
+                  returnPassengers.user=user
+                  returnPassengers.profile = profile
+                  await returnPassengers.save()
+                  ReturnBookingModel.passengerId=returnPassengers
+                  ReturnBookingModel.referenceId=ref
+                  ReturnBookingModel.payment=payments
+                  ReturnBookingModel.paymentType =bookingData.paymentType
+                  ReturnBookingModel.amount= bookingData.amount
+                  ReturnBookingModel.trip = ReturnTrip
+                  ReturnBookingModel.ConfirmedTripId=ReturnTrip.id
+                  ReturnBookingModel.ReturnTripId=ReturnTrip.id
+                  ReturnBookingModel.schedule=ReturnTrip.schedule
+                  ReturnBookingModel.ConfirmedReturnTripId=ReturnTrip.id
+                  ReturnBookingModel.TravelDate=bookingData.returnDate
+                  ReturnBookingModel.ConfirmedTravelDate=bookingData.returnDate
+                  ReturnBookingModel.ReturnDate=bookingData.returnDate
+                  ReturnBookingModel.ConfirmedReturnDate=bookingData.returnDate
+                  ReturnBookingModel.numberOfTravellers=7
+                  ReturnBookingModel.pickupLocation=bookingData.pickupLocation
+                  ReturnBookingModel.service=bookingData.service
+                  ReturnBookingModel.type=bookingData.type
+                  ReturnBookingModels.push(ReturnBookingModel) 
+                  
+                  console.log(returnPassengers)
+                  
+                 }
+                 const returnBooking = await Bookings.save(ReturnBookingModels)
+
+                 return {booking, returnBooking}
+                 
+
+
+            }else{
+                throw new AppError('invalid booking type selected')
+            }
+
+
+
+        }else{
+            throw new AppError("invalid booking service selected")
+        }
 
 
     }

@@ -14,7 +14,7 @@ router.post('/signup/customer', call(control.createCustomer, (req, res) => [req.
  router.post('/loginUsers', call(control.loginUser, (req,res) => [req.body]))
  router.post('/signup/user', call(control.createUser, (req,res) =>[req.body]))
  router.post('/assign/:id', call(control.assignPriviledge, (req,res) => [req.params.id, req.body]))
-
+//  router.delete()   
 
 
 export const AuthRouter = router

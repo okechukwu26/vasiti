@@ -13,6 +13,8 @@ import {Payments} from '../Payment'
 export class Bookings extends BaseEntity{
   @PrimaryGeneratedColumn('uuid')
     public id: string
+    @Column()
+    public amount:number
 
    @Column({unique:true})
     public referenceId:string

@@ -1,4 +1,4 @@
-import {BOOK,BookingType, VehicleStatus,BookingStatus} from '../../enums'
+import {BOOK,BookingType, VehicleStatus,BookingStatus,paymentType} from '../../enums'
 import {Passengers} from '../Passenger'
 import {Profile} from '../Profile'
 
@@ -9,8 +9,10 @@ export interface addBooking{
     travelDate:string
     numberOfTravellers:number
     seat?:string
+    paymentType:paymentType
+    amount:number
     ReturnSeat?:string
-    referenceId:string
+    referenceId?:string
     passenger:Passengers[]
     profile:Profile
     type:BookingType

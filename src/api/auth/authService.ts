@@ -99,12 +99,21 @@ export class AuthService {
         if(addUser.role === "customer"){
             throw new AppError('UnAuthorized', null, 404)
         }
-     
+            if(addUser.terminal === null){
+                throw new AppError('terminal ID required', null, 404)
+            }
         let {isValidPhoneNumber,parsedPhoneNumber} = this.parsePhoneNumber(addUser.phoneNumber)
         if(!isValidPhoneNumber){
             throw new AppError('invalid phone Number')
         }
-        const phone = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}]})       
+       
+              const terminal  =await Terminals.findOneOrFail({where:[{id:addUser.terminal}]})
+        .catch(() =>{
+            throw new AppError('invalid terminal')
+        })
+
+       
+         const phone = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}]})       
 
         if(phone){
             throw new AppError(`A user with this phoneNumber ${addUser.phoneNumber} already exist`)
@@ -113,23 +122,20 @@ export class AuthService {
         if(email){
             throw new AppError(`A user with this email ${addUser.email} already exists`)
         }
-        const terminal  =await Terminals.findOneOrFail({where:[{id:addUser.terminal}]})
-        .catch(() =>{
-            throw new AppError('invalid terminal')
-        })
+  
         const role = await Roles.findOneOrFail({where:[{role:addUser.role}]})
         .catch(() =>{
             throw new AppError('invalid role selected')
         })
-        console.log(role,terminal,)
+        console.log(role,terminal)
+     
        addUser.phoneNumber=parsedPhoneNumber
        //hash password
         addUser.password = await bcrypt.hash(addUser.password,8)
-        const priviledge = await Priviledge.findOne({where:[{name:role.role}]})
-        const user = Users.create(addUser)
-        console.log(user, priviledge)
+       const priviledge = await Priviledge.findOne({where:[{name:role.role}]})
+       const user = Users.create(addUser)       
         user.Terminal =terminal.id
-        user.priviledge=priviledge       
+        user.priviledge=priviledge      
         
         let priv = [priviledge]
         user.priviledges = priv.map(item => item.name)
@@ -149,7 +155,7 @@ export class AuthService {
             }
 
             const user = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}],
-                select:["id", "name", "password","phoneNumber", "priviledge",],
+                select:["id", "name", "password","phoneNumber", "priviledge","Terminal"],
                 relations:["roles", "priviledge"]
             })
             if(!user){
@@ -166,6 +172,8 @@ export class AuthService {
                 throw new AppError('UnAuthorized', null, 404)
             }
             delete (user.password)
+            console.log(user)
+          
 
             const refreshToken = await this.generateRefreshToken(user)
             const AccessToken = await this.generateAcessToken(user)

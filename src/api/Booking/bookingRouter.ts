@@ -11,7 +11,11 @@ const call = controlHandler
 const control = new BookingControler()
 
 
+    //customer  booking
 router.post('/', authorize, validation(createBookingSchema), call(control.BookATrip, (req,res) => [req.body, req.user]))
+    //user booking
+router.post('/user', authorize,  validation(createBookingSchema), call(control.UserBooking, (req,res) =>[req.body, req.user]))
+    //assign bus to a booking
 router.put('/',  authorize, call(control.AssignBus, (req, res) => [req.body, req.user]))
 router.get('/', authorize, call(control.GetBookingWithVehicles, (req, res) =>[req.body, req.user]))
 router.put('/status', authorize, call(control.updateBookingStatus, (req, res) => [req.body, req.user]))

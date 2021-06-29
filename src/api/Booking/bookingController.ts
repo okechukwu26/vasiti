@@ -7,11 +7,16 @@ import {Users} from '../User'
 export class BookingControler extends BaseController{
     private service = new BookingService()
 
-
+    //CUSTOMER BOOKING
     public BookATrip = async (bookingData:addBooking, user:Users) =>{
         const data = await this.service.BookATrip(bookingData, user)
         return this.sendResponse({data:data, statusCode:HttpStatusCode.CREATED})
 
+    }
+    //USER BOOKING
+    public UserBooking = async (bookingData:addBooking, user:Users) =>{
+        const data = await this.service.UserBooking(bookingData,user)
+        return this.sendResponse({data, statusCode:HttpStatusCode.CREATED})
     }
     public UnAuthBooking = async (bookingData:addBooking) =>{
         const data = await this.service.BookATrip(bookingData)

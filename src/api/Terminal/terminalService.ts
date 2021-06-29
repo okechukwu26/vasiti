@@ -36,32 +36,38 @@ export class TerminalService {
       
     }
     public deleteTerminal = async (id:string, user:Users) =>{
-        if(user.priviledges.includes('manager')){
+        if(user.priviledges.includes('admin')){
 
 
             const terminal = await Terminals.findOneOrFail({id})
             .catch(() =>{
                 throw new AppError('invalid terminal selected')
             })
-            if(user.Terminal !== terminal.id){
-                throw new AppError('UnAuthorized', null,404)
-            }
+           
           
     
             const route = await Routes.find({where:[{terminal:terminal.id}]})
-            route.forEach(async item => {
-                const trip = await Trips.find({where:[{route:item.id}]})
-                trip.forEach(async item =>{
-                    const seat = await Seats.find({where:[{trip:item.id}]})
-                    seat.forEach(async item => {
-                        await Seats.getRepository().delete({id:item.id})
-
+            console.log(route)
+            try {
+                route.forEach(async item => {
+                    const trip = await Trips.find({where:[{route:item.id}]})
+                    trip.forEach(async item =>{
+                        const seat = await Seats.find({where:[{trip:item.id}]})
+                        seat.forEach(async item => {
+                            await Seats.getRepository().delete({id:item.id})
+    
+                        })
+                        await Trips.getRepository().delete({id:item.id})
                     })
-                    await Trips.getRepository().delete({id:item.id})
+                    await Routes.getRepository().delete({id:item.id})
                 })
-                await Routes.getRepository().delete({id:item.id})
-            })
-             
+                 
+                
+            } catch (error) {
+                console.log(error)
+                
+            }
+           
             await Terminals.getRepository().delete({id:terminal.id})
            
         return "terminal deleted"
