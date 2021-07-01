@@ -59,7 +59,7 @@ export class TripService {
 
        
       const day =  dayjs(tripData.travelDate).format('dddd').toLowerCase()
-
+        //datra
        const trips =await Trips.find({where:[{
            route:tripData.routeId
 
