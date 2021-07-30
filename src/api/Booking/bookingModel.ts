@@ -69,6 +69,11 @@ export class Bookings extends BaseEntity{
     public payment:Payments
     @Column({type:'uuid', nullable:true})
     public vehicle:string
+    @Column()
+    public DepartureTerminal:string
+    @Column()
+    public ArrivalTerminal:string
+   
    
    
   

@@ -77,3 +77,8 @@ export interface passengerStatus {
     schedule:string
 
 }
+export interface searchBooking{
+    travelDate:string,
+    vehicle:string,
+    referenceId:string
+}

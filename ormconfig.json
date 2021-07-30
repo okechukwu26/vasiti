@@ -1,4 +1,3 @@
-
 {
   "type":"mysql",
   "host":"aws-test.c6jrsctnu0a8.eu-west-2.rds.amazonaws.com",
@@ -8,8 +7,8 @@
   "database":"Motor",
   "synchronize":false,
   "logging":false,
- "entities":["**/api/**/*Model.js"],
-  "migrations":["src/migration/*.js"],
+ "entities":["**/api/**/*Model.ts"],
+  "migrations":["src/migration/*.ts"],
   "cli":{
       "migrationsDir":"src/migration"
   }

@@ -4,7 +4,7 @@ import {AppError} from '../../utils'
 import {AddTrip, searchTrips,updateDay} from './tripInterface'
 import {VehicleType} from '../vehicleType'
 import {Seats} from './seatModel'
-import dayjs from 'dayjs'
+  import dayjs from 'dayjs'
 import {Bookings} from '../Booking'
 import {TripStatus} from '../../enums'
 // import{BOOK} from '../../enums'
@@ -67,42 +67,48 @@ export class TripService {
        
          if(!trips){
              throw new AppError('invalid trip selected')
-         }    
+         }  
+         
 
+            
        const searchResult = []
-    for (let trip of trips){
+      for (let trip of trips){
 
        const available =  trip.Days.includes(day)
+       console.log(available)
        if(!available){
            trip.TripStatus =TripStatus.NOTAVAILABLE
-           searchResult.push(trip)
-       }
-
-       const booking =  await Bookings.find({where:[{
-           trip:trip.id,
-           TravelDate:tripData.travelDate,
-           service:"book_a_seat"
-           
-       }], relations:["passengerId"]})
-
-     
-
-    
-      if(booking.length === 0){
+        }
+        
+        try {
+            
+            const booking =  await Bookings.find({where:[{
+                trip:trip.id,
+                TravelDate:tripData.travelDate,
+                service:"book_a_seat"
+                
+            }], relations:["passengerId"]})
+            if(booking.length === 0){
           
-         searchResult.push(trip)
-                  
-       }
-    
-       
-       else{
+                searchResult.push(trip)
+                         
+              }
+                     else{
          for(const book of booking){
            trip.seat = trip.seat.filter(item => item.id !== book.seat)
            
    }
         searchResult.push(trip)
          }
-    }
+     
+            
+        } catch (error) {
+            throw new AppError(error)
+            
+        }     
+
+    
+   }
    
    return searchResult
      

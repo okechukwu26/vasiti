@@ -1,7 +1,7 @@
 import {BaseController} from '../baseController'
 import{BookingService} from './bookingService'
 import {HttpStatusCode,} from '../../enums'
-import {addBooking, AssignBus, GetBookingWithVehicle, InTransit, updateBooking, vehicleStatus,bookingStatus, passengerStatus} from './bookingInterface'
+import {addBooking, AssignBus, GetBookingWithVehicle, InTransit, updateBooking, vehicleStatus,bookingStatus, passengerStatus, searchBooking} from './bookingInterface'
 import {Users} from '../User'
 
 export class BookingControler extends BaseController{
@@ -12,6 +12,17 @@ export class BookingControler extends BaseController{
         const data = await this.service.BookATrip(bookingData, user)
         return this.sendResponse({data:data, statusCode:HttpStatusCode.CREATED})
 
+    }
+    //get ref
+    public Reference = async(id, user:Users) =>{
+        const data = await this.service.Reference(id, user)
+        return this.sendResponse({data,statusCode:HttpStatusCode.OK })
+
+    }
+    //searchBooking
+    public searchBooking = async(search:searchBooking, user:Users)=>{
+        const data = await this.service.SearchBooking(search,user)
+        return this.sendResponse({data:data, statusCode:HttpStatusCode.OK})
     }
     //USER BOOKING
     public UserBooking = async (bookingData:addBooking, user:Users) =>{
