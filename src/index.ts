@@ -2,7 +2,7 @@ import app from './app';
 
 import { logger } from './utils/logger';
 
-let port = process.env.PORT || 5000;
+let port = process.env.PORT || 4000;
 
 app.listen(port, () => { 
 

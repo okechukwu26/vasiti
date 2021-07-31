@@ -12,7 +12,7 @@ const call = controlHandler
 const control = new TripController()
 
 
-router.post('/',  validation(TripValidationSchema), call(control.createTrip, (req,res) => [req.body, req.user]))
+router.post('/', authorize,  validation(TripValidationSchema), call(control.createTrip, (req,res) => [req.body, req.user]))
 router.get('/search',  validation(TripSearch), call(control.searchTrip, (req:Request, res) => [req.query, req.body]))
 router.put('/:id', authorize, validation(TripUpdateSchema), call(control.updateTrip, (req:Request,res) => [ req.params.id,req.body, req.user]))
  router.put('/day/:id', authorize,  call(control.updateDay, (req:Request,res) => [ req.params.id,req.body, req.user]))

@@ -10,12 +10,16 @@ export class RoutesService {
         .catch(() =>{
             throw new AppError("invalid terminal selected")
         })
-        console.log(terminal, routeData.terminalId)
+     
         const arrival = await Terminals.findOne({name: routeData.arrivalName})
         if(!arrival){
             throw new AppError('invalid arrival route name selected')
         }
-        const exroute = await Routes.findOne({route:routeData.route})
+        const exroute = await Routes.findOne({where:[{
+            route:routeData.route,
+            terminal:routeData.terminalId
+        }]})
+        console.log(exroute, terminal)
         if(exroute){
             throw new AppError('route name already exists')
         }
@@ -27,9 +31,9 @@ export class RoutesService {
         newRoute.type = routeData.type
         newRoute.terminal=terminal
         newRoute.arrivalTerminal =arrival
-
-
         return await newRoute.save()
+
+       
 
 
 

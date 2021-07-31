@@ -11,7 +11,8 @@ import {Routes} from '../Routes'
 export class TerminalService {
 
     public createTerminal = async (terminalData:AddTerminal, user:Users) =>{
-       if(user.priviledges.includes('manager')){
+       if(user.priviledges.includes('admin',)){
+           console.log("hello")
         const lga =  await LGA.findOneOrFail({id:terminalData.lgaId})
         .catch(() =>{
             throw new AppError("invalid lga selected")

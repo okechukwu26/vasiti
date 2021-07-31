@@ -1,8 +1,8 @@
 import {Trips } from './tripModel'
-import {Routes} from '../Routes'
+ import {Routes} from '../Routes'
 import {AppError} from '../../utils'
 import {AddTrip, searchTrips,updateDay} from './tripInterface'
-import {VehicleType} from '../vehicleType'
+ import {VehicleType} from '../vehicleType'
 import {Seats} from './seatModel'
   import dayjs from 'dayjs'
 import {Bookings} from '../Booking'
@@ -16,6 +16,14 @@ import { Users } from '../User'
 
 export class TripService {
     public createTrip = async (tripData:AddTrip, user:Users) =>{
+        console.log(user)
+        if(user.block){
+            throw new AppError("UnAuthorized")
+        }
+        const isValid = user.priviledges.includes("admin")
+        if(!isValid){
+            throw new AppError("UnAuthorized", null, 404)
+        }
        
        const route = await Routes.findOneOrFail({id:tripData.routeId})
             .catch(() =>{
@@ -28,7 +36,8 @@ export class TripService {
             console.log(route, type)
 
            const trip = await Trips.findOne({where:[{
-               schedule:tripData.schedule
+               schedule:tripData.schedule,
+               route:tripData.routeId
            }]})
            if(trip){
                throw new AppError('schedule already exists')
