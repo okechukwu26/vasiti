@@ -1,6 +1,6 @@
 import {BookingControler} from './bookingController'
 import {controlHandler} from '../../utils'
-import express from 'express'
+import express, {Request} from 'express'
 import{authorize,validation} from '../../middleware'
 
 import {createBookingSchema} from './bookingValidator'
@@ -16,7 +16,7 @@ router.post('/', authorize, validation(createBookingSchema), call(control.BookAT
     //user booking
 router.post('/user', authorize,  validation(createBookingSchema), call(control.UserBooking, (req,res) =>[req.body, req.user]))
 //getRefence
-router.get('/ref/id', authorize, call(control.Reference, (req,res) => [req.body, req.user]))        
+router.get('/ref', authorize, call(control.Reference, (req:Request,res) => [req.query, req.user]))        
 //searchBooking
 router.get('/search', authorize, call(control.searchBooking, (req,res) => [req.body, req.user]))    
 //assign bus to a booking
