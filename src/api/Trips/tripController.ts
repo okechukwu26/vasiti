@@ -29,4 +29,9 @@ export class TripController extends BaseController{
         const data = await this.services.deleteDay(id,user)
         return this.sendResponse({data, statusCode:HttpStatusCode.OK})
     }
+    public getTrip = async () => {
+        const data = await this.services.getTrip()
+
+        return this.sendResponse({data, statusCode:HttpStatusCode.OK})
+    }
 }

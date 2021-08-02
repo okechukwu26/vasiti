@@ -8,6 +8,7 @@ import {
   bookingStatus,
   passengerStatus,
   searchBooking,
+  refernce,
 } from './bookingInterface';
 import { AppError } from '../../utils';
 
@@ -451,11 +452,12 @@ export class BookingService {
     if (!Authorized) {
       console.log('hello');
     }
-    const trip = await Trips.findOneOrFail({ id: bookingData.tripId }).catch(
-      () => {
-        throw new AppError('invalid trip selected');
-      }
-    );
+    const trip  = await Trips.findOneOrFail({where:[{
+      id:bookingData.tripId
+  }], relations:["route"]})
+.catch(() => {
+  throw new AppError('invalid trip selected');
+});
     const payment = {
       amount: String(bookingData.amount),
       method: 'offline',
@@ -500,6 +502,8 @@ export class BookingService {
           bookingModel.passengerId = passengers;
           bookingModel.trip = trip;
           bookingModel.seat = passenger.seat;
+          bookingModel.ArrivalTerminal=trip.route.route;
+          bookingModel.DepartureTerminal=trip.route.Terminal;
           bookingModel.amount = bookingData.amount;
           bookingModel.payment = payments;
           bookingModel.passengerId = passengers;
@@ -1236,6 +1240,8 @@ export class BookingService {
       try {
           
           const search = await Bookings.find({where:[{
+              DepartureTerminal:bookingData.departureTerminal,
+              ArrivalTerminal:bookingData.arrivalTerminal,
               TravelDate:bookingData.travelDate
 
           }],})
@@ -1247,7 +1253,7 @@ export class BookingService {
       }
   }
 
-  public Reference = async(id, user:Users) =>{
+  public Reference = async(reference:refernce, user:Users) =>{
       if(user.block){
           throw new AppError("UnAuthorized")
       }
@@ -1255,7 +1261,7 @@ export class BookingService {
       if(isValid){
           throw new AppError("UnAuthorized")
       }
-      const ref = await Bookings.findOneOrFail({referenceId:id.id})
+      const ref = await Bookings.findOneOrFail({referenceId:reference.id})
       .catch(err => {throw new AppError("invalid reference id selected")})
       return ref
 

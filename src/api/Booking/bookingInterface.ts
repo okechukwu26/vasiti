@@ -79,6 +79,9 @@ export interface passengerStatus {
 }
 export interface searchBooking{
     travelDate:string,
-    vehicle:string,
-    referenceId:string
+    arrivalTerminal:string,
+    departureTerminal:string
+}
+export interface refernce{
+    id:string
 }

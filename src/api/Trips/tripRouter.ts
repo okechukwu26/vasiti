@@ -17,6 +17,6 @@ router.get('/search',  validation(TripSearch), call(control.searchTrip, (req:Req
 router.put('/:id', authorize, validation(TripUpdateSchema), call(control.updateTrip, (req:Request,res) => [ req.params.id,req.body, req.user]))
  router.put('/day/:id', authorize,  call(control.updateDay, (req:Request,res) => [ req.params.id,req.body, req.user]))
  router.delete('/:id', authorize, call(control.deleteDays, (req:Request,res) => [ req.params.id, req.user]))
-
+    router.get('/', call(control.getTrip, (req,res) =>[]) )
 
 export const TripRouter = router

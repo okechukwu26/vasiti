@@ -201,6 +201,18 @@ public deleteDay = async(id:string, user:Users) =>{
     return 'trip deleted'
 
 }
+public getTrip = async() => {
+
+    try {
+        const trip  = await Trips.find()
+        return trip
+        
+    } catch (error) {
+        throw new AppError(error)
+    }
+
+    
+}
 }
 
 
