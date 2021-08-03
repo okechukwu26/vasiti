@@ -11,4 +11,8 @@ export class VehicleTypeController extends BaseController{
         const data = await this.service.createVehicleType(vehicleData)
         return this.sendResponse({data, statusCode:HttpStatusCode.CREATED})
     }
+    public getVehicleType = async () =>{
+        const data = await this.service.getVehicleType()
+        return this.sendResponse({data, statusCode:HttpStatusCode.OK})
+    }
 }

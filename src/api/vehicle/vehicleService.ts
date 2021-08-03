@@ -52,6 +52,10 @@ export class VehicleService {
         return { isValidPhoneNumber, parsedPhoneNumber };
       }
 
+      public getVehicle = async () =>{ 
+          return await Vehicles.find()
+      }
+
 }
 
 

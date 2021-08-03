@@ -1261,9 +1261,8 @@ export class BookingService {
       if(isValid){
           throw new AppError("UnAuthorized")
       }
-      console.log(reference)
-      const ref = await Bookings.findOneOrFail({referenceId:reference.id})
-      .catch(err => {throw new AppError("invalid reference id selected")})
+      const ref = await Bookings.findOne({where:[{referenceId:reference.id}]})
+    
       return ref
 
   }

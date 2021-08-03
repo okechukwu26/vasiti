@@ -22,4 +22,14 @@ export class VehicleTypeService {
        return await data.save()
 
     }
+    public getVehicleType = async () =>{
+        try {
+            return await VehicleType.find()
+            
+        } catch (error) {
+            throw new AppError(error)
+            
+        }
+
+    }
 }

@@ -11,6 +11,6 @@ const control = new VehicleTypeController()
 router.use(validation(VehicleTypesValidationSchema))
 
 router.post('/', call(control.createVehicleType, (req,res) =>[req.body]))
-
+router.get("/", call(control.getVehicleType, (req,res) =>[]))
 
 export const VehicleTypeRouter = router
