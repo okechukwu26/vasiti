@@ -1,8 +1,9 @@
 import {Vehicles} from './vehicleModel'
- import {VehicleType} from '../vehicleType'
+import {VehicleType} from '../vehicleType'
 import {AppError} from '../../utils'
 import {AddVehicle} from './vehicleInterface'
 import {PhoneNumberUtil, PhoneNumberFormat, PhoneNumber} from 'google-libphonenumber'
+
 
 
 export class VehicleService {
@@ -12,29 +13,40 @@ export class VehicleService {
        if(!isValidPhoneNumber){
            throw new AppError('invalid phone Number')
        }
-        const vehicle = await Vehicles.findOne({where:[{
-            PC:vehicleData.PC
-        }]})
-        if(vehicle){
-            throw new AppError(`The PC ${vehicleData.PC} is already attributed to a vehicle`)
-
-        }
+       console.log(parsedPhoneNumber)
+       try {
+           const vehicle = await Vehicles.findOne({where:[{
+               PC:vehicleData.PC,
+               PCPhoneNumber:parsedPhoneNumber
+           }]})
+           if(vehicle){
+               throw new AppError(`The PC ${vehicleData.PC} is already attributed to a vehicle`)
+               
+           }
+          
+           
+         
+           const type =  await VehicleType.findOneOrFail({id:vehicleData.typeId})
+           .catch(() =>{
+               throw new AppError('invalid vehicle type selected')
+           })
+           const newvehicle = Vehicles.create(vehicleData)
+           newvehicle.PCPhoneNumber = parsedPhoneNumber
+           newvehicle.Location = vehicleData.location
+           
     
-        const type =  await VehicleType.findOneOrFail({id:vehicleData.typeId})
-        .catch(() =>{
-            throw new AppError('invalid vehicle type selected')
-        })
-        console.log(type)
+           newvehicle.vehicleType= type    
+                 
+    
+                 return await newvehicle.save()
+         
+       } catch (error) {
+           throw new AppError(error)
+       }
 
-       const newvehicle = Vehicles.create(vehicleData)
-       newvehicle.PCPhoneNumber = parsedPhoneNumber
-       newvehicle.Location = vehicleData.location
-       
+    
 
-       newvehicle.vehicleType= type    
-             
-
-             return await newvehicle.save()
+   
 
     }
     private parsePhoneNumber(phoneNumber: string) {

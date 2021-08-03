@@ -204,11 +204,11 @@ public deleteDay = async(id:string, user:Users) =>{
 public getTrip = async() => {
 
     try {
-        const trip  = await Trips.find()
+        const trip  = await Trips.find({where:[{}], relations:["route"]})
         return trip
         
     } catch (error) {
-        throw new AppError(error)
+        throw new AppError(error) 
     }
 
     
