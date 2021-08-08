@@ -75,6 +75,7 @@ export interface passengerStatus {
     trip:string,
     route:string,
     schedule:string
+    referenceId:string
 
 }
 export interface searchBooking{
@@ -84,4 +85,8 @@ export interface searchBooking{
 }
 export interface refernce{
     id:string
+}
+export interface manifest {
+    vehicleId:string
+    schedule:string
 }

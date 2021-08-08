@@ -6,7 +6,7 @@ export const createBookingSchema = joi.object().keys({
     tripId:joi.string().uuid().required(),
     returnTripId:joi.string().uuid().optional(),
     travelDate:joi.string().optional(),
-    amount:joi.number().required(),
+   
     type:joi.string().valid(BookingType.ONE_WAY, BookingType.ROUND_TRIP).required(),
     service:joi.string().valid(BOOK.BOOK_A_SEAT, BOOK.HIRE_SERVICE).required(),
     numberOfTravellers:joi.number().required(),

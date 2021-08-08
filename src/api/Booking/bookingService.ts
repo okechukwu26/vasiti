@@ -9,6 +9,7 @@ import {
   passengerStatus,
   searchBooking,
   refernce,
+  manifest,
 } from './bookingInterface';
 import { AppError } from '../../utils';
 
@@ -86,14 +87,14 @@ export class BookingService {
           await passengers.save();
 
           bookingModel.passengerId = passengers;
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.trip = trip;
           bookingModel.seat = passenger.seat;
           bookingModel.DepartureTerminal = trip.route.Terminal
           bookingModel.ArrivalTerminal= trip.route.route
           bookingModel.payment = payment;
-          (bookingModel.paymentType = paymentType.CARD),
-            (bookingModel.schedule = trip.schedule);
+          bookingModel.paymentType = paymentType.CARD,
+            bookingModel.schedule = trip.schedule;
           bookingModel.service = bookingData.service;
           bookingModel.type = bookingData.type;
           bookingModel.numberOfTravellers = 1;
@@ -148,9 +149,7 @@ export class BookingService {
           throw new AppError('Trip Return Date is not available for this trip');
         }
 
-        const amount = Number(
-          bookingData.amount / bookingData.numberOfTravellers
-        );
+       
 
         await this.verifySeat(
           trip.id,
@@ -192,7 +191,7 @@ export class BookingService {
           bookingModel.DepartureTerminal = trip.route.Terminal;
           bookingModel.ArrivalTerminal = trip.route.route
           bookingModel.payment = payment;
-          bookingModel.amount = amount;
+          bookingModel.amount = trip.price;
           bookingModel.paymentType = paymentType.CARD;
           bookingModel.schedule = trip.schedule;
           bookingModel.seat = roundTripPassenger.seat;
@@ -233,7 +232,7 @@ export class BookingService {
           bookingModel.seat = passenger.seat;
           bookingModel.DepartureTerminal = ReturnTrip.route.Terminal
           bookingModel.ArrivalTerminal = ReturnTrip.route.route
-          bookingModel.amount = amount;
+          bookingModel.amount = trip.price;
           bookingModel.ReturnSeat = returnPasenger.ReturnSeat;
           bookingModel.payment = payment;
           bookingModel.paymentType = paymentType.CARD;
@@ -283,7 +282,7 @@ export class BookingService {
           bookingModel.schedule = trip.schedule;
           bookingModel.DepartureTerminal =trip.route.Terminal,
           bookingModel.ArrivalTerminal =trip.route.route
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.numberOfTravellers = 5;
           bookingModel.ConfirmedTripId = trip.id;
           bookingModel.type = bookingData.type;
@@ -340,7 +339,7 @@ export class BookingService {
           bookingModel.passengerId = passenger;
           bookingModel.ReturnTripId = ReturnTrip.id;
           bookingModel.ConfirmedReturnTripId = ReturnTrip.id;
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.DepartureTerminal=trip.route.Terminal,
           bookingModel.ArrivalTerminal = trip.route.route,
           bookingModel.TravelDate = bookingData.travelDate;
@@ -369,7 +368,7 @@ export class BookingService {
           console.log(returnPassengers);
           ReturnBookingModel.passengerId = returnPassengers;
           ReturnBookingModel.referenceId = bookingData.referenceId;
-          ReturnBookingModel.amount = bookingData.amount;
+          ReturnBookingModel.amount = trip.price;
           ReturnBookingModel.trip = ReturnTrip;
           ReturnBookingModel.DepartureTerminal= ReturnTrip.route.Terminal
           ReturnBookingModel.ArrivalTerminal = ReturnTrip.route.route
@@ -459,7 +458,7 @@ export class BookingService {
   throw new AppError('invalid trip selected');
 });
     const payment = {
-      amount: String(bookingData.amount),
+      amount: String(trip.price),
       method: 'offline',
       status: 'paid',
       referenceId: user.id,
@@ -500,11 +499,12 @@ export class BookingService {
           passengers.profile = profile;
           await passengers.save();
           bookingModel.passengerId = passengers;
+          bookingModel.profile =profile
           bookingModel.trip = trip;
           bookingModel.seat = passenger.seat;
           bookingModel.ArrivalTerminal=trip.route.route;
           bookingModel.DepartureTerminal=trip.route.Terminal;
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.payment = payments;
           bookingModel.passengerId = passengers;
           (bookingModel.paymentType = bookingData.paymentType),
@@ -590,9 +590,9 @@ export class BookingService {
           bookingModel.passengerId = passenger;
           bookingModel.trip = trip;
           bookingModel.payment = payments;
-          bookingModel.amount = amount;
-          (bookingModel.referenceId = ref),
-            (bookingModel.paymentType = bookingData.paymentType);
+          bookingModel.amount = trip.price;
+          bookingModel.referenceId = ref,
+            bookingModel.paymentType = bookingData.paymentType;
           bookingModel.schedule = trip.schedule;
           bookingModel.seat = roundTrip.seat;
           bookingModel.ReturnSeat = roundTrip.ReturnSeat;
@@ -629,7 +629,7 @@ export class BookingService {
           bookingModel.ConfirmedReturnTripId = bookingData.returnTripId;
           bookingModel.ReturnTripId = ReturnTrip.id;
           bookingModel.seat = passenger.seat;
-          bookingModel.amount = amount;
+          bookingModel.amount = trip.price;
           bookingModel.ReturnSeat = returnPasenger.ReturnSeat;
           bookingModel.payment = payments;
           bookingModel.paymentType = bookingData.paymentType;
@@ -680,7 +680,7 @@ export class BookingService {
           bookingModel.TravelDate = bookingData.travelDate;
           (bookingModel.schedule = trip.schedule),
             (bookingModel.payment = payments);
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.numberOfTravellers = 7;
           bookingModel.ConfirmedTripId = trip.id;
           bookingModel.type = bookingData.type;
@@ -723,7 +723,7 @@ export class BookingService {
           bookingModel.passengerId = passenger;
           bookingModel.ReturnTripId = ReturnTrip.id;
           bookingModel.ConfirmedReturnTripId = ReturnTrip.id;
-          bookingModel.amount = bookingData.amount;
+          bookingModel.amount = trip.price;
           bookingModel.TravelDate = bookingData.travelDate;
           bookingModel.ConfirmedTravelDate = bookingData.travelDate;
           bookingModel.ReturnDate = bookingData.returnDate;
@@ -757,7 +757,7 @@ export class BookingService {
           ReturnBookingModel.referenceId = ref;
           ReturnBookingModel.payment = payments;
           ReturnBookingModel.paymentType = bookingData.paymentType;
-          ReturnBookingModel.amount = bookingData.amount;
+          ReturnBookingModel.amount = trip.price;
           ReturnBookingModel.trip = ReturnTrip;
           ReturnBookingModel.ConfirmedTripId = ReturnTrip.id;
           ReturnBookingModel.ReturnTripId = ReturnTrip.id;
@@ -852,7 +852,7 @@ export class BookingService {
     const booking = await Bookings.find({
       where: [
         {
-          TravelDate: bookingData.travelDate,
+          ConfirmedTravelDate: bookingData.travelDate,
           service: bookingData.service,
           type: bookingData.type,
           trip: trip.id,
@@ -942,7 +942,7 @@ export class BookingService {
 
     // console.log(route.terminal, user.Terminal)
     if (user.Terminal !== route.terminal.id) {
-      throw new AppError('UmAuthorized', null, 404);
+      throw new AppError('UnAuthorized', null, 404);
     }
 
     const trip = await Trips.findOneOrFail({
@@ -956,11 +956,13 @@ export class BookingService {
       throw new AppError('invalid trip selected');
     });
 
+   
+
     const booking = await Bookings.findOne({
       where: [
         {
-          TravelDate: transitData.travelDate,
-          trip: trip.id,
+         ConfirmedTravelDate: transitData.travelDate,
+          ConfirmedTripId: trip.id,
           vehicle: transitData.vehicleId,
         },
       ],
@@ -1056,7 +1058,7 @@ export class BookingService {
     const booking = await Bookings.findOneOrFail({
       where: [
         {
-          TravelDate: update.travelDate,
+          ConfirmedTravelDate: update.travelDate,
           referenceId: update.referenceId,
         },
       ],
@@ -1162,38 +1164,60 @@ export class BookingService {
   }
 
   public changeToDelay = async (bookingData: bookingStatus, user: Users) => {
-    if (user.block) {
+    if (user.block === true) {
       throw new AppError('UnAuthorized', null, 404);
     }
+    const authorize = user.priviledges.includes("manager")
+      if(!authorize){
+        throw new AppError('UnAuthorized', null, 404);
 
-    if (user.priviledges.includes('manager')) {
-      throw new AppError('UnAuthorized', null, 404);
-    }
+      }
 
-    const booking = await Bookings.findOneOrFail({
-      where: [
-        {
-          id: bookingData.id,
-          bookingStatus: BookingStatus.APPROVED,
-          vehicle: null,
-        },
-      ],
-    }).catch(() => {
-      throw new AppError('invalid data');
-    });
-    booking.bookingStatus = BookingStatus.DELAY;
+      console.log(bookingData)
+      try {
+        
+        const booking = await Bookings.findOneOrFail({where:[{
+          referenceId:bookingData.id,
+          vehicle:null,
+          bookingStatus:BookingStatus.APPROVED
+        }]}).catch(() =>{
+          throw new AppError("Invalid data")
+        })
+        booking.bookingStatus = BookingStatus.DELAY
+       return await booking.save()
+      } catch (error) {
+        throw new AppError(error)
+        
+      }
 
-    await booking.save();
-    return 'status updated';
+  
+   
+    // booking.bookingStatus = BookingStatus.DELAY;
+
+    // await booking.save();
+    // return 'status updated';
   };
 
   public changePassengerStatus = async (bookingData: passengerStatus) => {
     const updates = Object.keys(bookingData);
-    const isAllowed = ['trip', 'schedule', 'trip'];
+    const isAllowed = ['trip', 'schedule', 'ConfirmedTravelDate', "referenceId", "bookingStatus"];
     const isMatch = updates.every((item) => isAllowed.includes(item));
 
     if (!isMatch) {
       throw new AppError('invalid update');
+    }
+    
+    try {
+      const booking = await Bookings.findOneOrFail({where:[{referenceId:bookingData.referenceId,
+      bookingStatus:BookingStatus.DELAY}]}).catch(() => {throw new AppError("no referenceId match this search")})
+      
+      updates.forEach(item => booking[item] = bookingData[item])
+      return await booking.save()
+           
+      
+    } catch (error) {
+      throw new AppError(error)
+      
     }
   };
   public TransLoading = async () => {
@@ -1266,5 +1290,23 @@ export class BookingService {
       return ref
 
   }
+  public PrintManifest = async (manifest:manifest, user:Users) =>{
+    try {
+      const print = await Bookings.find({where:[{
+        vehicle:manifest.vehicleId,
+        schedule:manifest.schedule
+        
+      }]})
+      console.log(print)
+      const vehicle = await Vehicles.findOne({id:manifest.vehicleId})
+      console.log(vehicle)
+    } catch (error) {
+      console.log(error)
+      
+    }
+
+    
+  }
+
 
 }

@@ -26,7 +26,9 @@ router.put('/status', authorize, call(control.updateBookingStatus, (req, res) =>
 router.put('/vehicleStatus',  call(control.vehicleStatus, (req, res) => [req.body, req.user]))
 router.post('/unauth', validation(createBookingSchema), call(control.UnAuthBooking, (req,res) => [req.body]))
 router.post('/transit', authorize, call(control.InTransitVehicle, (req,res) =>[req.body, req.user]))
-router.post('/delay', authorize, call(control.changeToDelay, (req, res) =>[req.body, req.user]))
+router.put('/delay', authorize, call(control.changeToDelay, (req, res) =>[req.body, req.user]))
 router.post('/trip', call(control.changePassengerTrip, (req,res) =>[req.body]))
-// router.get('/status')
+// print manifest
+router.post('/manifest',  call(control.printManifest, (req,res) => [req.body]))
+
 export const BookingRouter = router

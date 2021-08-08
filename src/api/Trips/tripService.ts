@@ -6,10 +6,11 @@ import {AddTrip, searchTrips,updateDay} from './tripInterface'
 import {Seats} from './seatModel'
   import dayjs from 'dayjs'
 import {Bookings} from '../Booking'
-import {TripStatus} from '../../enums'
+import {BookingStatus, TripStatus} from '../../enums'
 // import{BOOK} from '../../enums'
 import {updateTrips} from './tripInterface'
 import { Users } from '../User'
+import{Not} from "typeorm-plus"
 
 
 
@@ -93,8 +94,9 @@ export class TripService {
             
             const booking =  await Bookings.find({where:[{
                 trip:trip.id,
-                TravelDate:tripData.travelDate,
-                service:"book_a_seat"
+                ConfirmedTravelDate:tripData.travelDate,
+                service:"book_a_seat",
+                bookingStatus:Not(BookingStatus.DELAY)
                 
             }], relations:["passengerId"]})
             if(booking.length === 0){

@@ -1,7 +1,7 @@
 import {BaseController} from '../baseController'
 import{BookingService} from './bookingService'
 import {HttpStatusCode,} from '../../enums'
-import {addBooking, AssignBus, GetBookingWithVehicle, InTransit, updateBooking, vehicleStatus,bookingStatus, passengerStatus, searchBooking} from './bookingInterface'
+import {addBooking, AssignBus, GetBookingWithVehicle, InTransit, updateBooking, vehicleStatus,bookingStatus, passengerStatus, searchBooking, manifest} from './bookingInterface'
 import {Users} from '../User'
 
 export class BookingControler extends BaseController{
@@ -68,5 +68,9 @@ export class BookingControler extends BaseController{
         const status = await this.service.changePassengerStatus(bookingData)
         return this.sendResponse({data:status})
         
+    }
+    public printManifest = async(manifest:manifest,user:Users) =>{
+        const vehicle = await this.service.PrintManifest(manifest, user)
+        return this.sendResponse({data:vehicle, statusCode:HttpStatusCode.OK})
     }
 }

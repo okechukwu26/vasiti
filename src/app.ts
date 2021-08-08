@@ -187,3 +187,20 @@ export default app
 //       "migrationsDir":"src/migration"
 //   }
 // }
+
+
+// {
+//   "type":"mysql",
+//   "host":"localhost",
+//   "username":"root",
+//   "password":"Okechukwuemordi26",
+//   "database":"miracle",
+//   "logging":false,
+//   "synchronize":false,
+//   "entities":["**/api/**/*Model.ts"],
+//   "migrations":["src/migration/*.ts"],
+//   "cli":{
+//       "migrationsDir":"src/migration"
+//   }
+
+// }

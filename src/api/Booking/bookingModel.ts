@@ -4,6 +4,7 @@ import {BookingStatus,BookingType,BOOK,paymentType} from '../../enums'
 import {Trips} from '../Trips'
 import {Passengers} from '../Passenger'
 import {Payments} from '../Payment'
+import {Profile} from '../Profile'
 
 
 
@@ -26,6 +27,9 @@ export class Bookings extends BaseEntity{
     public passengerId:Passengers
     @Column({type:"enum", enum:paymentType})
    public paymentType: paymentType
+   @OneToOne(type => Profile)
+   @JoinColumn()
+   public profile:Profile
    
 
    @Column({ type: 'enum', enum: BookingType })
