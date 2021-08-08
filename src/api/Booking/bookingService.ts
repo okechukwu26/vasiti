@@ -1174,7 +1174,7 @@ export class BookingService {
       }
 
       console.log(bookingData)
-      try {
+      
         
         const booking = await Bookings.findOneOrFail({where:[{
           referenceId:bookingData.id,
@@ -1185,10 +1185,7 @@ export class BookingService {
         })
         booking.bookingStatus = BookingStatus.DELAY
        return await booking.save()
-      } catch (error) {
-        throw new AppError(error)
-        
-      }
+     
 
   
    

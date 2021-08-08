@@ -155,7 +155,7 @@ export class AuthService {
             }
 
             const user = await Users.findOne({where:[{phoneNumber:parsedPhoneNumber}],
-                select:["id", "name", "password","phoneNumber", "priviledge","Terminal"],
+                select:["id", "name", "password","phoneNumber", "priviledge","Terminal", "priviledges"],
                 relations:["roles", "priviledge"]
             })
             if(!user){

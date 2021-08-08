@@ -27,7 +27,7 @@ export class Bookings extends BaseEntity{
     public passengerId:Passengers
     @Column({type:"enum", enum:paymentType})
    public paymentType: paymentType
-   @OneToOne(type => Profile)
+   @OneToOne(type => Profile, {eager:true})
    @JoinColumn()
    public profile:Profile
    
