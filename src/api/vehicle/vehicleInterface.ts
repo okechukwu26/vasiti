@@ -9,3 +9,11 @@ export interface AddVehicle {
      location:string
 
 }
+
+export interface vehicleStatus {
+    available:string,
+    down:string,
+    arrived:string
+    id:string
+
+}

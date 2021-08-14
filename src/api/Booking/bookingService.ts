@@ -1184,7 +1184,8 @@ export class BookingService {
           throw new AppError("Invalid data")
         })
         booking.bookingStatus = BookingStatus.DELAY
-       return await booking.save()
+       await booking.save()
+       return "Passenger status changed to delay"
      
 
   
@@ -1282,23 +1283,43 @@ export class BookingService {
       if(isValid){
           throw new AppError("UnAuthorized")
       }
-      const ref = await Bookings.findOne({where:[{referenceId:reference.id}]})
+      const ref = await Bookings.findOneOrFail({where:[{referenceId:reference.id}]}).catch(() =>{
+        throw new AppError("Invalid reference Number")
+      })
+    
     
       return ref
 
   }
   public PrintManifest = async (manifest:manifest, user:Users) =>{
+
+    
+    
+    if(user.block){
+      throw new AppError("UnAuthorized", null, 404)
+    }
+    if(user.priviledges.includes("customer")){
+      throw new AppError("UnAuthorized", null, 404)
+    }
     try {
       const print = await Bookings.find({where:[{
         vehicle:manifest.vehicleId,
-        schedule:manifest.schedule
+        schedule:manifest.schedule,
+        TravelDate:manifest.travelDate,
         
       }]})
-      console.log(print)
-      const vehicle = await Vehicles.findOne({id:manifest.vehicleId})
-      console.log(vehicle)
+      console.log(print, print.length)
+      if(print.length !== 0){
+        const vehicle = await Vehicles.findOne({id:manifest.vehicleId})
+        return {print, vehicle}
+
+      }
+      else{
+        throw new AppError("invalid data")
+      }
+  
     } catch (error) {
-      console.log(error)
+   throw new AppError("invalid data")
       
     }
 

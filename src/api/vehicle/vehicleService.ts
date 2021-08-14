@@ -1,8 +1,9 @@
 import {Vehicles} from './vehicleModel'
 import {VehicleType} from '../vehicleType'
 import {AppError} from '../../utils'
-import {AddVehicle} from './vehicleInterface'
+import {AddVehicle,vehicleStatus} from './vehicleInterface'
 import {PhoneNumberUtil, PhoneNumberFormat, PhoneNumber} from 'google-libphonenumber'
+import {Users} from '../User'
 
 
 
@@ -66,6 +67,33 @@ export class VehicleService {
 
       public getVehicle = async () =>{ 
           return await Vehicles.find()
+      }
+      public changeVehicleStatus = async (data:vehicleStatus , user:Users) =>{
+          if(user.block){
+              throw new AppError("UnAuthorized", 404, null)
+          }
+          if(!user.priviledges.includes("manager")){
+              throw new AppError("UnAuthorized")
+          }
+
+        const vehicle = await Vehicles.findOneOrFail({where:[{
+            id:data.id
+        }]}).catch(() =>{
+            throw new AppError("invalid vehcicle ")
+        })
+        const update = Object.keys(data)
+        const isAllowed =["available","down", "arrived"]
+        const isMatch = update.every((item) => isAllowed.includes(item))
+
+            if(!isMatch){
+                throw new AppError("invalid vehicle status")
+            }
+          update.forEach(item => vehicle[item] = data[item])  
+          await vehicle.save()
+          return "vehicle status updated"
+
+
+
       }
 
 }

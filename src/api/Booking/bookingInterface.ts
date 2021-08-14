@@ -89,4 +89,5 @@ export interface refernce{
 export interface manifest {
     vehicleId:string
     schedule:string
+    travelDate:string
 }

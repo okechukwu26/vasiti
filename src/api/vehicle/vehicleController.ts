@@ -1,7 +1,8 @@
 import {BaseController} from '../baseController'
 import {VehicleService} from './vehicleService'
 import{HttpStatusCode} from '../../enums'
-import {AddVehicle} from './vehicleInterface'
+import {AddVehicle,vehicleStatus} from './vehicleInterface'
+import {Users} from "../User"
 
 
 
@@ -17,6 +18,11 @@ export class VehicelController extends BaseController{
     public getVehicle = async () =>{
         const vehicle = await this.service.getVehicle()
         return this.sendResponse({data:vehicle, statusCode:HttpStatusCode.OK})
+    }
+    public changeVehicleStatus = async(data:vehicleStatus, user:Users) =>{
+        const vehicle = await this.service.changeVehicleStatus(data, user)
+        return this.sendResponse({data:vehicle, statusCode:HttpStatusCode.OK})
+
     }
 
 

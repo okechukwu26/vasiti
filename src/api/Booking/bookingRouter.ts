@@ -29,6 +29,6 @@ router.post('/transit', authorize, call(control.InTransitVehicle, (req,res) =>[r
 router.put('/delay', authorize, call(control.changeToDelay, (req, res) =>[req.body, req.user]))
 router.post('/trip', call(control.changePassengerTrip, (req,res) =>[req.body]))
 // print manifest
-router.post('/manifest',  call(control.printManifest, (req,res) => [req.body]))
+router.post('/manifest', authorize,  call(control.printManifest, (req,res) => [req.body, req.user]))
 
 export const BookingRouter = router

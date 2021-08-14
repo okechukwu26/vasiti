@@ -1,4 +1,5 @@
 import express from 'express'
+import { authorize } from '../../middleware'
 import {controlHandler} from '../../utils'
 import {VehicelController} from './vehicleController'
 
@@ -8,5 +9,6 @@ const control = new VehicelController()
 
 router.post('/', call(control.createVehicle, (req, res) => [req.body]))
 router.get('/', call(control.getVehicle, (req,res) =>[]))
+router.put('/', authorize, call(control.changeVehicleStatus, (req,res) => [req.body, req.user]))
 
 export const VehicleRouter = router
