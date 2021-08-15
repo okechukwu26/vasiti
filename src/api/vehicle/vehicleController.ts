@@ -19,8 +19,8 @@ export class VehicelController extends BaseController{
         const vehicle = await this.service.getVehicle()
         return this.sendResponse({data:vehicle, statusCode:HttpStatusCode.OK})
     }
-    public changeVehicleStatus = async(data:vehicleStatus, user:Users) =>{
-        const vehicle = await this.service.changeVehicleStatus(data, user)
+    public changeVehicleStatus = async(id, data:vehicleStatus, user:Users) =>{
+        const vehicle = await this.service.changeVehicleStatus(id, data, user)
         return this.sendResponse({data:vehicle, statusCode:HttpStatusCode.OK})
 
     }

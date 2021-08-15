@@ -68,27 +68,31 @@ export class VehicleService {
       public getVehicle = async () =>{ 
           return await Vehicles.find()
       }
-      public changeVehicleStatus = async (data:vehicleStatus , user:Users) =>{
+      public changeVehicleStatus = async (id,data:vehicleStatus , user:Users) =>{
           if(user.block){
               throw new AppError("UnAuthorized", 404, null)
           }
           if(!user.priviledges.includes("manager")){
               throw new AppError("UnAuthorized")
           }
+         
+     
 
         const vehicle = await Vehicles.findOneOrFail({where:[{
-            id:data.id
+            id:id
         }]}).catch(() =>{
-            throw new AppError("invalid vehcicle ")
+            throw new AppError("invalid vehicle ")
         })
-        const update = Object.keys(data)
+        const update = Object.values(data)
+        console.log(update)
         const isAllowed =["available","down", "arrived"]
         const isMatch = update.every((item) => isAllowed.includes(item))
 
             if(!isMatch){
                 throw new AppError("invalid vehicle status")
             }
-          update.forEach(item => vehicle[item] = data[item])  
+          vehicle.vehicleStatus = data.vehicleStatus
+          console.log(vehicle) 
           await vehicle.save()
           return "vehicle status updated"
 

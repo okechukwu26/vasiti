@@ -9,6 +9,6 @@ const control = new VehicelController()
 
 router.post('/', call(control.createVehicle, (req, res) => [req.body]))
 router.get('/', call(control.getVehicle, (req,res) =>[]))
-router.put('/', authorize, call(control.changeVehicleStatus, (req,res) => [req.body, req.user]))
+router.put('/:id', authorize, call(control.changeVehicleStatus, (req,res) => [req.params.id,req.body, req.user]))
 
 export const VehicleRouter = router

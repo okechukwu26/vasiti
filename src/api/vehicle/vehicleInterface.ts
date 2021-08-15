@@ -1,3 +1,4 @@
+import {VehicleStatus} from '../../enums'
 export interface AddVehicle {
     plateNumber:string
     chasisNumber:string
@@ -11,9 +12,7 @@ export interface AddVehicle {
 }
 
 export interface vehicleStatus {
-    available:string,
-    down:string,
-    arrived:string
+    vehicleStatus:VehicleStatus
     id:string
 
 }
