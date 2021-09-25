@@ -8,8 +8,8 @@
     "database":"vasiti",
     "synchronize":true,
     "logging":false,
-   "entities":["**/api/**/*Model.ts"],
-    "migrations":["src/migration/*.ts"],
+   "entities":["**/api/**/*Model.js"],
+    "migrations":["src/migration/*.js"],
     "cli":{
         "migrationsDir":"src/migration"
     }
