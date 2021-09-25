@@ -1,11 +1,11 @@
 import { BaseApiResponse } from "./../api/baseInterface";
-import { Users as UserModel } from "../api/User/userModel";
+//import { Users as UserModel } from "../api/User/userModel";
 import { Request, Response, NextFunction } from "express";
 /* Type declaration to override User type declared by passport */
 declare global {
     namespace Express {
         // tslint:disable-next-line:no-empty-interface
-        interface User extends UserModel { }
+        //interface User extends UserModel { }
     }
 }
 
