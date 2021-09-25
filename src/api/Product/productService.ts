@@ -129,4 +129,8 @@ export class ProductService {
 
 
     }
+    GetProduct = async () =>{
+
+        return await Products.find()
+    }
 }

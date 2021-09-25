@@ -22,5 +22,9 @@ export class ProductController extends BaseController {
             const data  = await this.service.UpdateVarieties(id, varieties)
             return this.sendResponse({data})
         }
+        GetProduct = async () =>{
+            const data = await this.service.GetProduct()
+            return this.sendResponse({data})
+        }
     
 }

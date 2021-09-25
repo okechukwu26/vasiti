@@ -24,4 +24,5 @@ router.post("/", upload.single("image"),  call(control.CreateProduct,  (req,res)
 router.delete("/", call(control.DeleteVarieties, (req,res) => [req.body]))
 router.put("/:id", call(control.UpdateProduct,(req,res) => [req.params.id, req.body]) )
 router.put('/varieties/:id', call(control.UpdateVarieties, (req, res) => [req.params.id, req.body]))
+router.get("/", call(control.GetProduct, (req,res) => []))
 export const productRouter =  router
